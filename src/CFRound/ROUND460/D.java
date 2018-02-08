@@ -1,79 +1,94 @@
-package Codechef.FEBLONG;
+package CFRound.ROUND460;
 import java.util.*;
 import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+
+public class D {
+        String INPUT = "3 2 aba 1 3 2 3";
+        char[] a;
+        boolean[] vis;
+        int[] freq = new int[26];
+        int ans = Integer.MIN_VALUE;
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
+                int n = i(), m = i();
+                a = s().toCharArray();
+                int[] from = new int[m];
+                int[] to   = new int[m];
+                vis        = new boolean[n];
 
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+                for (int i = 0; i <m; i++) {
+                        from[i] = i()-1;
+                        to[i]   = i()-1;
                 }
-                return res;
+                int[][] graph = DirectedGraph(n,from,to,m);
+                int[] topSort;
+                if((topSort=sortTopologically(graph))==null)
+                {
+                        out.println(-1);
+                        return;
+                }
+                for(char c='a';c<='z';c++)
+                {
+                        int[] dp = new int[n];
+                        for (int i: topSort) {
+                                if(a[i]==c)
+                                        dp[i]++;
+                                ans = Math.max(ans,dp[i]);
+                                for(int e: graph[i])
+                                        dp[e] = Math.max(dp[e],dp[i]);
+                        }
+                }
+                out.println(ans);
+        }
+        private static int[] sortTopologically(int[][] g)
+        {
+                int n = g.length;
+                int[] ec = new int[n];
+                //ec stores in degree of every vertex
+                for(int i = 0; i < n; i++){
+                        for(int to : g[i])ec[to]++;
+                }
+
+                int[] ret = new int[n];
+                int q = 0;
+                // sources
+                for(int i = 0;i < n;i++){
+                        if(ec[i] == 0)ret[q++] = i;
+                }
+
+                for(int p = 0;p < q;p++){
+                        for(int to : g[ret[p]]){
+                                if(--ec[to] == 0)ret[q++] = to;
+                        }
+                }
+                // loop
+                for(int i = 0;i < n;i++){
+                        if(ec[i] > 0)return null;
+                }
+                return ret;
+        }
+        private static int[][] DirectedGraph(int n, int[] from, int[] to, int m)
+        {
+                int[][] g = new int[n][];
+                int[] p = new int[n];
+                for(int i = 0;i < m;i++)p[from[i]]++;
+                for(int i = 0;i < n;i++)g[i] = new int[p[i]];
+                for(int i = 0;i < m;i++){
+                        g[from[i]][--p[from[i]]] = to[i];
+                }
+                return g;
         }
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new D().run();
         }
         InputStream is;
         PrintWriter out;

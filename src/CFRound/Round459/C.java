@@ -1,79 +1,63 @@
-package Codechef.FEBLONG;
+package CFRound.Round459;
 import java.util.*;
 import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+public class C {
+        String INPUT = "??()??";
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
+                char[] s = s().toCharArray();
+                boolean[][] f = new boolean[5005][5005];
+                boolean[][] b = new boolean[5005][5005];
+                for (int i = 0; i < s.length; i++) {
+                        boolean ok = true;
+                        int count=0;
+                        for (int j = i; j < s.length ; j++) {
+                                if(s[j]=='('||s[j]=='?')
+                                        count++;
+                                else
+                                        count--;
+                                if(count<0)
+                                        ok = false;
+                                f[i][j] = ok;
+                                if(!ok) break;
+                        }
 
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
                 }
-                return res;
+                for (int i = 0; i<s.length; i++) {
+                        boolean ok = true;
+                        int count=0;
+                        for (int j = i; j >=0 ; j--) {
+                                if(s[j]==')'||s[j]=='?')
+                                        count++;
+                                else
+                                        count--;
+                                if(count<0)
+                                        ok = false;
+                                b[i][j] = ok;
+                                if(!ok) break;
+                        }
+
+                }
+                int ans = 0;
+                for (int i = 0; i < s.length; i++) {
+                        for (int j = i+1; j < s.length; j++) {
+                                if(Math.abs(j-i+1)%2==0 && f[i][j] && b[j][i])
+                                        ans++;
+                        }
+                }
+                out.println(ans);
         }
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new C().run();
         }
         InputStream is;
         PrintWriter out;

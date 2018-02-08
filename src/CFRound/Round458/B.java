@@ -1,79 +1,52 @@
-package Codechef.FEBLONG;
-import java.util.*;
-import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+package CFRound.Round458;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+public class B {
+        String INPUT = "2 1 1\n";
+
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
-
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+                int n = i();
+                int[] a = ia(n);
+                //reverse sorted
+                int[] freq = new int[100005];
+                for (int i = 0; i <n ; i++) {
+                        freq[a[i]]++;
                 }
-                return res;
+                boolean flag = false;
+                for(int i = 0 ; i<freq.length; i++)
+                {
+                        if(freq[i]%2!=0)
+                        {
+                                flag = true;
+                                break;
+                        }
+                }
+                if(!flag)
+                        out.println("Agasa");
+                else
+                        out.println("Conan");
+
+
         }
+        ///////////////////////////////////////
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new B().run();
         }
         InputStream is;
         PrintWriter out;

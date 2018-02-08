@@ -1,65 +1,77 @@
 package Codechef.FEBLONG;
 import java.util.*;
 import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+public class H {
+        String INPUT = "2\n" +
+                "5\n" +
+                "4 5\n" +
+                "3 5\n" +
+                "2 4\n" +
+                "1 3\n" +
+                "5 5\n" +
+                "2\n" +
+                "4 1 2 3 4\n" +
+                "1 4\n" +
+                "5\n" +
+                "4 5\n" +
+                "3 5\n" +
+                "2 4\n" +
+                "2 3\n" +
+                "5 5\n" +
+                "2\n" +
+                "2 2 5\n" +
+                "3 1 2 5";
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
-
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+//                int n = i();
+//                BitSet[] bt = new BitSet[n];
+//                for (int i = 0; i < n; i++) {
+//                        bt[i] = new BitSet(n);
+//                }
+//                for (int i = 0; i < n; i++) {
+//                        int l = i(), r = i();
+//                        for (int j = l; j <=r ; j++) {
+//                                bt[i].set(j);
+//                        }
+//                }
+//                int q = i();
+//                while(q-->0)
+//                {
+//                        int m = i();
+//                        BitSet bt1 = new BitSet(m);
+//                        for (int i = 0; i < m; i++) {
+//                                bt1.set(i());
+//                        }
+//                        int count = 0;
+//                        for (int i = 0; i < n; i++) {
+//                                BitSet bt2 = (BitSet)bt1.clone();
+//                                bt2.and(bt[i]);
+//                                if(bt2.cardinality()%2==1)
+//                                        count++;
+//                        }
+//                        out.println(count);
+//                }
+                int n = i();
+                int[] a = new int[n+2];
+                for (int i = 0; i < n; i++) {
+                        int l = i(), r= i();
+                        a[l]++; a[r+1]--;
                 }
-                return res;
+                for (int i = 1; i < n+1 ; i++) {
+                        a[i]+=a[i-1];
+                }
+                int q = i();
+                while(q-->0)
+                {
+                        int m = i();
+                        int ans = 0;
+                        for(int i = 1; i<=m; i++){
+                                int x = i();
+                                if((a[x]&1)==1)
+                                        ans++;
+                        }
+                        out.println(ans);
+                }
         }
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
@@ -73,7 +85,7 @@ public class E {
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new H().run();
         }
         InputStream is;
         PrintWriter out;

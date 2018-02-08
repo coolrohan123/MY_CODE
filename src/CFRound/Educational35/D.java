@@ -1,79 +1,74 @@
-package Codechef.FEBLONG;
-import java.util.*;
-import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+package CFRound.Educational35;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+public class D {
+        String INPUT = "4\n" +
+                "1 2 4 3\n" +
+                "4\n" +
+                "1 1\n" +
+                "1 4\n" +
+                "1 4\n" +
+                "2 3";
+
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
+                //Using final in those variable where we are sure that it will not change
+                // will reduce executiion time
+                final int n = i();
+                final int[] a = ia(n);
+                final int q = i();
+                Answer(n, a, q);
 
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
+
         }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
+
+        private void Answer(int n, int[] a, int q) {
+                int count = 0 ;
+                count = getInversionCount(n, a, count);
+                printAnsforQuery(count, q);
         }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+
+        private void printAnsforQuery(int count, int q) {
+                for (int i = 0; i < q; i++) {
+                        final int l = i(), r = i();
+                        final int mid = (r - l + 1) / 2;
+                        if (mid % 2 == 0) {
+                                out.println(count % 2 == 0 ? "even" : "odd");
+                        } else {
+                                count++;
+                                out.println(count % 2 == 0 ? "even" : "odd");
+                        }
                 }
-                return res;
         }
+
+        private int getInversionCount(int n, int[] a, int count) {
+                for (int i = 0; i < n - 1; i++) {
+                        for (int j = i + 1; j < n; j++) {
+                                if (a[j] < a[i]) {
+                                        count++;
+                                }
+                        }
+                }
+                return count;
+        }
+
+        /////////////////////////////////////////////////////////////
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
-                long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
-                solve();
+                int t = 1;
+                while(t-->0)	solve();
                 out.flush();
-                tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new D().run();
         }
         InputStream is;
         PrintWriter out;
@@ -176,5 +171,4 @@ public class E {
 
         private boolean oj = System.getProperty("ONLINE_JUDGE") != null;
         private void tr(Object... o) { if(!oj)System.out.println(Arrays.deepToString(o)); }
-
 }

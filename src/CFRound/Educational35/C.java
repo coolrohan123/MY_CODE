@@ -1,79 +1,62 @@
-package Codechef.FEBLONG;
+package CFRound.Educational35;
+
 import java.util.*;
 import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+
+public class C {
+        String INPUT = "2 2 3";
+
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
-
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
+                /**
+                 * for given k1,k2,k3 find whether it is possible
+                 * to generate S1US2US3={m,m+1,m+2,...} where m = Max(m1,m2,m3)
+                 * and S1 = x1,x1+k1,x1+2k1,....
+                 * S2 = x2,x2+k2,x2+2k2,....
+                 * and so on
+                 *
+                 * Solution:
+                 * There are a few cases to consider for YES
+                 * THose are
+                 * 1. one of k =1
+                 * 2. exactly two of them=2
+                 * 3. all of them =3
+                 * 4.{2,4,4}
+                 */
+                int[] a = ia(3);
+                Arrays.sort(a);
+                if(a[0] == 1)
                 {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+                        out.println("YES");
                 }
-                return res;
+                else if ((a[1]==2 &&a[2]==2 )||(a[0]==2 &&a[1]==2))
+                {
+                        out.println("YES");
+                }
+                else if(a[0]==3 && a[1]==3 &&a[2]==3)
+                {
+                        out.println("YES");
+                }
+                else if(a[0]==2 && a[1] ==4 && a[2]==4)
+                {
+                        out.println("YES");
+                }
+                else
+                {
+                        out.println("NO");
+                }
         }
+        ///////////////////////////////////////
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
-                long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
-                solve();
+                int t = 1;
+                while(t-->0)	solve();
                 out.flush();
-                tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new C().run();
         }
         InputStream is;
         PrintWriter out;
@@ -176,5 +159,4 @@ public class E {
 
         private boolean oj = System.getProperty("ONLINE_JUDGE") != null;
         private void tr(Object... o) { if(!oj)System.out.println(Arrays.deepToString(o)); }
-
 }

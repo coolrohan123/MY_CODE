@@ -6,7 +6,7 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
 import java.lang.*;
-
+import java.lang.Math;
 public class Test {
         String INPUT = "aabbb";
         void solve()
@@ -26,8 +26,15 @@ public class Test {
 //                        }
 //                });
 //                Arrays.stream(a).forEach(e->out.print(e+" "));
-                long k = 100000000000000L;
-                out.println((int)k%10);
+//                long k = 100000000000000L;
+//                out.println((int)k%10);
+                int i = 3,j = 13;
+                int sum = i+j;
+                int y = Integer.highestOneBit(sum);
+                int z = Math.max(Integer.highestOneBit(i),Integer.highestOneBit(j));
+                if(y>z)
+                        sum = y;
+                out.println(sum+" "+y+" "+z);
         }
 
         void run() throws Exception{

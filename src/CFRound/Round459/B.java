@@ -1,79 +1,72 @@
-package Codechef.FEBLONG;
+package CFRound.Round459;
 import java.util.*;
 import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+public class B {
+        String INPUT = "3 5\n" +
+                "google 8.8.8.8\n" +
+                "codeforces 212.193.33.27\n" +
+                "server 138.197.64.57\n" +
+                "redirect 138.197.64.57;\n" +
+                "block 8.8.8.8;\n" +
+                "cf 212.193.33.27;\n" +
+                "unblock 8.8.8.8;\n" +
+                "check 138.197.64.57;";
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
-
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+                int n = i(), m = i();
+                Pair[] pair1 = new Pair[n];
+                for (int i = 0; i < n; i++) {
+                        pair1[i] = new Pair(s(),s());
                 }
-                return res;
+                Pair[] pair2 = new Pair[m];
+                for (int i = 0; i < m; i++) {
+                        String s1 = s();
+                        String s2 = s();
+                        pair2[i] = new Pair(s1,s2.substring(0, s2.length()-1));
+                }
+                for (int i = 0; i < m; i++) {
+                        Pair p = pair2[i];
+                        for (int j = 0; j < n; j++) {
+                                if(p.b.equals(pair1[j].b))
+                                {
+                                        pair2[i].b+="; #"+pair1[j].a;
+                                        break;
+                                }
+                        }
+                }
+                for(Pair p: pair2)
+                {
+                        out.println(p.a+" "+p.b);
+                }
+        }
+        static class Pair
+        {
+                String a,b;
+
+                public Pair(String a, String b) {
+                        this.a = a;
+                        this.b = b;
+                }
+
+                @Override
+                public String toString() {
+                        return "Pair{" +
+                                "a='" + a + '\'' +
+                                ", b='" + b + '\'' +
+                                '}';
+                }
         }
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new B().run();
         }
         InputStream is;
         PrintWriter out;

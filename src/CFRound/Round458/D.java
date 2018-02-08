@@ -1,79 +1,121 @@
-package Codechef.FEBLONG;
-import java.util.*;
-import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
-        void solve()
-        {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
+package CFRound.Round458;
 
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
-                {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+
+public class D {
+         String INPUT = "5\n" +
+                 "1 2 3 4 5\n" +
+                 "6\n" +
+                 "1 1 4 2\n" +
+                 "2 3 6\n" +
+                 "1 1 4 2\n" +
+                 "1 1 5 2\n" +
+                 "2 5 10\n" +
+                 "1 1 5 2";
+        public class Tree {
+                int pow = 1 << 19;
+                int[] gcd = new int[2 * pow];
+
+                Tree(int[] a) {
+                        for (int i = 0; i < a.length; i++) {
+                                gcd[pow + i] = a[i];
+                        }
+                        for (int i = pow - 1; i > 0; i--) {
+                                update(i);
+                        }
                 }
-                return res;
+
+                private void update(int v) {
+                        gcd[v] = gcd(gcd[2 * v], gcd[2 * v + 1]);
+                }
+
+                private void set(int to, int x) {
+                        set(1, 0, pow - 1, to, x);
+                }
+
+                private void set(int v, int l, int r, int to, int x) {
+                        if (v >= pow) {
+                                gcd[v] = x;
+                        } else {
+                                int m = (l + r) / 2;
+                                if (to <= m) {
+                                        set(2 * v, l, m, to, x);
+                                } else {
+                                        set(2 * v + 1, m + 1, r, to, x);
+                                }
+                                update(v);
+                        }
+                }
+
+                private boolean get(int l, int r, int x) {
+                        int y = get(1, 0, 0, pow - 1, l, r, x);
+                        return y < 2;
+                }
+
+                private int get(int v, int n, int l, int r, int left, int right, int x) {
+                        if (r < left || l > right) {
+                                return n;
+                        }
+                        if (l >= left && r <= right) {
+                                if (gcd[v] % x == 0) {
+                                        return n;
+                                }
+                                if (v >= pow) {
+                                        n++;
+                                        return n;
+                                }
+                        }
+                        int m = (l + r) / 2;
+                        n = get(2 * v, n, l, m, left, right, x);
+                        if (n > 1) {
+                                return n;
+                        }
+                        n = get(2 * v + 1, n, m + 1, r, left, right, x);
+                        return n;
+                }private int gcd(int a,int b)
+                {
+                        return  b == 0? a: gcd(b,a%b);
+                }
         }
+
+         void solve()
+         {
+                 int n = i();
+                 int[] a = new int[n];
+                 for (int i = 0; i <n ; i++) {
+                         a[i] = i();
+                 }
+                 Tree seg = new Tree(a);
+                 int q = i();
+                 while(q-->0)
+                 {
+                         if(i()==1)
+                         {
+                                 out.println(seg.get(i()-1,i()-1,i())?"YES":"NO");
+                         }
+                         else
+                                 seg.set(i()-1,i());
+                 }
+
+         }
+
+        ///////////////////////////////////////
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new D().run();
         }
         InputStream is;
         PrintWriter out;

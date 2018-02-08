@@ -1,79 +1,76 @@
-package Codechef.FEBLONG;
+package CFRound.round453;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.*;
-import java.io.*;
-public class E {
-        String INPUT = "1 4 2 5" ;
-        long MOD = 1000000000+7;
-        long a = 0,b=0,first=0;
+
+public class B {
+        String INPUT = "2 1 1 1";
+        static class Pair{
+                int ver,col;
+
+                public Pair(int ver, int col) {
+                        this.ver = ver;
+                        this.col = col;
+                }
+
+                @Override
+                public String toString() {
+                        return "Pair{" +
+                                "ver=" + ver +
+                                ", col=" + col +
+                                '}';
+                }
+        }
+
         void solve()
         {
-                long I = l(), D = l(), T = l();
-                first = D%MOD*inv(I,MOD)%MOD;
-                a = (2*D*inv(I,MOD)%MOD)%MOD;
-                b = MOD-1;
-                out.println(I%MOD*findNTH(T)%MOD);
-        }
-        long findNTH(long n)
-        {
-                if(n == 0)
-                        return 1;
-                if(n == 1)
-                        return first;
-                long[][] F = new long[][]{{a,b},{1,0}};
-                power(F,n-1);
-                return (F[0][0]*first%MOD+F[0][1])%MOD;
-        }
-        void power(long[][] F,long n)
-        {
-                if(n == 0 || n == 1)
-                        return ;
-                long[][] M = new long[][]{{a,b},{1,0}};
-                power(F,n/2);
-                multiply(F,F);
-                if((n&1) == 1)
-                        multiply(F,M);
-        }
-        void multiply(long[][] F,long[][] M)
-        {
-                long x =  F[0][0]*M[0][0]%MOD + F[0][1]*M[1][0]%MOD;
-                long y =  F[0][0]*M[0][1]%MOD + F[0][1]*M[1][1]%MOD;
-                long z =  F[1][0]*M[0][0]%MOD + F[1][1]*M[1][0]%MOD;
-                long w =  F[1][0]*M[0][1]%MOD + F[1][1]*M[1][1]%MOD;
+                int n = i();
+                int[] ver = ia(n-1);
+                int[] color = ia(n);
+                ArrayList<Pair> arrayList[] = new ArrayList[n+1];
+                for(int i = 0 ; i<=n ; i++)
+                        arrayList[i] = new ArrayList<Pair>();
 
-                F[0][0] = x%MOD;
-                F[0][1] = y%MOD;
-                F[1][0] = z%MOD;
-                F[1][1] = w%MOD;
-        }
-        private long inv(long base,long mod)
-        {
-                return modPow(base,mod-2,mod);
-        }
-        private long modPow(long base,long exp,long mod)
-        {
-                long res = 1L;
-                while(exp>0)
+                for(int i = 0; i<n-1; i++)
                 {
-                        if(exp%2==1)
-                                res = (res*base)%mod;
-                        base = (base*base)%mod;
-                        exp>>=1;
+                        arrayList[ver[i]].add(new Pair(i+2,color[i+1]));
                 }
-                return res;
+                //tr(arrayList);
+                bfs(1,arrayList,color[0]);
+                out.println(ans);
         }
+        int ans = 1;
+        private void bfs(int ver, ArrayList<Pair>[] arrayList, int col)
+        {
+                Queue<Pair> queue = new LinkedList<>();
+                queue.add(new Pair(ver,col));
+                while(!queue.isEmpty())
+                {
+                        Pair p = queue.poll();
+                        for(Pair q: arrayList[p.ver])
+                        {
+                                if(q.col!=p.col )
+                                        ans++;
+                                queue.add(new Pair(q.ver,q.col));
+                        }
+                }
+        }
+
+        ///////////////////////////////////////
         void run() throws Exception{
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new E().run();
+                new B().run();
         }
         InputStream is;
         PrintWriter out;
