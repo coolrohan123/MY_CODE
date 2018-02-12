@@ -1,31 +1,15 @@
 package FastScanner;
 
-import java.util.*;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.InputMismatchException;
 public class Competitive{
-        // Assigned a maximum of 1e7+3 size of array in the problem SMPLSUM in codechef solution got accepted
-        //used the formula sum{i=1 to n}[n/gcd(i,n)] = multiplication of all primes of n ->(p^{2e+1}+1)/(p+1)
-        String INPUT = "";
-
-        void solve()
-        {
-
-        }
-        ///////////////////////////////////////
-        void run() throws Exception{
-                is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
-                //is = System.in;
-                out = new PrintWriter(System.out);
-                long s = System.currentTimeMillis();
-                solve();
-                out.flush();
-                tr(System.currentTimeMillis()-s+"ms");
-        }
-        public static void main(String[] args)throws Exception {
-                new Competitive().run();
-        }
         InputStream is;
-        PrintWriter out;
+
+        public Competitive(InputStream is) {
+                this.is = is;
+        }
         private byte[] inbuf = new byte[1024];
         public int lenbuf = 0, ptrbuf = 0;
 
@@ -43,10 +27,15 @@ public class Competitive{
         private boolean isSpaceChar(int c) { return !(c >= 33 && c <= 126); }
         private int skip() { int b; while((b = readByte()) != -1 && isSpaceChar(b)); return b; }
 
-        private double d() { return Double.parseDouble(s()); }
-        private char c() { return (char)skip(); }
+        public double d() {
+                return Double.parseDouble(s());
+        }
 
-        private String s()
+        public char c() {
+                return (char) skip();
+        }
+
+        public String s()
         {
                 int b = skip();
                 StringBuilder sb = new StringBuilder();
@@ -57,7 +46,7 @@ public class Competitive{
                 return sb.toString();
         }
 
-        private char[] sa(int n)
+        public char[] sa(int n)
         {
                 char[] buf = new char[n];
                 int b = skip(), p = 0;
@@ -68,21 +57,21 @@ public class Competitive{
                 return n == p ? buf : Arrays.copyOf(buf, p);
         }
 
-        private char[][] nm(int n, int m)
+        public char[][] nm(int n, int m)
         {
                 char[][] map = new char[n][];
                 for(int i = 0;i < n;i++)map[i] = sa(m);
                 return map;
         }
 
-        private int[] ia(int n)
+        public int[] ia(int n)
         {
                 int[] a = new int[n];
                 for(int i = 0;i < n;i++)a[i] = i();
                 return a;
         }
 
-        private int i()
+        public int i()
         {
                 int num = 0, b;
                 boolean minus = false;
@@ -102,7 +91,7 @@ public class Competitive{
                 }
         }
 
-        private long l()
+        public long l()
         {
                 long num = 0;
                 int b;

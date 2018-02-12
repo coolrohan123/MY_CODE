@@ -1,53 +1,69 @@
+package CFRound.Round461;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.InputMismatchException;
 
-class Main {
+public class D {
         public int lenbuf = 0, ptrbuf = 0;
-        String INPUT = "2 1000 2 1";
+        String INPUT = "4\n" +
+                "ssh\n" +
+                "hs\n" +
+                "s\n" +
+                "hhhs";
         InputStream is;
         PrintWriter out;
         private byte[] inbuf = new byte[1024];
         private boolean oj = System.getProperty("ONLINE_JUDGE") != null;
 
         public static void main(String[] args) throws Exception {
-                new Main().run();
+                new D().run();
         }
 
         void solve() {
-                final int n = i();
-                long k = l();
-                int[] a = ia(n);
-                int[] temp = Arrays.copyOf(a, n);
-                int ans = a[0];
-                int[] val = new int[n + 1];
-                for (int i = 0; i < n - 1; i++) {
-                        if (a[i] > a[i + 1]) {
-                                val[a[i]]++;
-                                swap(a, i, i + 1);
-
-                        } else {
-                                ans = a[i + 1];
-                                val[a[i + 1]]++;
-                        }
+                int n = i();
+                String[] pair = new String[n];
+                for (int i = 0; i < n; i++) {
+                        pair[i] = s();
                 }
-                for (int x : temp) {
-                        if (val[x] >= k) {
-                                out.println(x);
-                                return;
+                Arrays.sort(pair, new Comparator<String>() {
+                        @Override
+                        public int compare(String o1, String o2) {
+                                String first = o1 + o2;
+                                String second = o2 + o1;
+                                long ans1 = 0, count1 = 0, ans2 = 0, count2 = 0;
+                                for (int i = 0; i < first.length(); i++) {
+                                        if (first.charAt(i) == 's')
+                                                count1++;
+                                        else
+                                                ans1 += count1;
+                                }
+                                for (int i = 0; i < second.length(); i++) {
+                                        if (second.charAt(i) == 's')
+                                                count2++;
+                                        else
+                                                ans2 += count2;
+                                }
+                                return Long.compare(ans2, ans1);
                         }
+                });
+                StringBuilder s = new StringBuilder();
+
+                for (int i = 0; i < n; i++) {
+                        s.append(pair[i]);
                 }
-                out.println(Arrays.stream(temp).max().getAsInt());
-
-        }
-
-        void swap(int[] a, int i, int j) {
-                int temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
+                long ans = 0, count = 0;
+                for (int i = 0; i < s.length(); i++) {
+                        if (s.charAt(i) == 's')
+                                count++;
+                        else
+                                ans += count;
+                }
+                out.println(ans);
         }
 
         void run() {

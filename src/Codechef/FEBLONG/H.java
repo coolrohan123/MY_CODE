@@ -1,6 +1,13 @@
 package Codechef.FEBLONG;
-import java.util.*;
-import java.io.*;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.BitSet;
+import java.util.InputMismatchException;
 public class H {
         String INPUT = "2\n" +
                 "5\n" +
@@ -51,29 +58,76 @@ public class H {
 //                        }
 //                        out.println(count);
 //                }
-                int n = i();
-                int[] a = new int[n+2];
+//                int n = i();
+//                BitSet[] bt = new BitSet[n];
+//                for (int i = 0; i < n; i++) {
+//                        bt[i] = new BitSet(n);
+//                }
+//                for (int i = 0; i < n; i++) {
+//                        int l = i()-1,r = i()-1;
+//                        for (int j = l; j <=r; j++) {
+//                                bt[j].set(i);
+//                        }
+//                }
+//                int q = i();
+//                while(q-->0)
+//                {
+//                        int m = i();
+//                        BitSet ans = new BitSet(n);
+//                        for (int i = 0; i < m; i++) {
+//                                int x = i()-1;
+//                                ans.xor(bt[x]);
+//                        }
+//                        out.println(ans.cardinality());
+//                }
+                final int n = i();
+                final ArrayList<Integer>[] from = new ArrayList[n + 2];
+                final ArrayList<Integer>[] to = new ArrayList[n + 2];
+                for (int i = 0; i <= n + 1; i++) {
+                        from[i] = new ArrayList<>();
+                        to[i] = new ArrayList<>();
+                }
                 for (int i = 0; i < n; i++) {
-                        int l = i(), r= i();
-                        a[l]++; a[r+1]--;
+                        int l = i(), r = i();
+                        from[l].add(i);
+                        to[++r].add(i);
                 }
-                for (int i = 1; i < n+1 ; i++) {
-                        a[i]+=a[i-1];
+                final BitSet[] bt = new BitSet[n + 1];
+                for (int i = 0; i <= n; i++) {
+                        bt[i] = new BitSet();
                 }
-                int q = i();
-                while(q-->0)
-                {
-                        int m = i();
-                        int ans = 0;
-                        for(int i = 1; i<=m; i++){
-                                int x = i();
-                                if((a[x]&1)==1)
-                                        ans++;
+                final BitSet current = new BitSet(n + 1);
+                for (int u : from[1]) {
+                        bt[1].set(u);
+                        current.set(u);
+                }
+                for (int v : to[1]) {
+                        bt[1].clear(v);
+                        current.clear(v);
+                }
+                for (int i = 2; i <= n; i++) {
+                        for (int u : from[i]) {
+                                current.set(u);
                         }
-                        out.println(ans);
+                        for (int v : to[i]) {
+                                current.clear(v);
+                        }
+                        bt[i] = (BitSet) current.clone();
+                }
+                final int q = i();
+                for (int i = 0; i < q; i++)
+                {
+                        final int m = i();
+                        final BitSet b = new BitSet(n + 1);
+                        for (int j = 0; j < m; j++) {
+                                final int x = i();
+                                b.xor(bt[x]);
+                        }
+                        out.println(b.cardinality());
                 }
         }
-        void run() throws Exception{
+
+        void run() {
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
