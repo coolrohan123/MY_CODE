@@ -1,7 +1,11 @@
-package Codes.Codeforces.ED37;
+package CFRound.ED37;
 
-import java.util.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
 public class A {
         String INPUT = "1 5 2 1 5";
         void solve()
@@ -35,7 +39,8 @@ public class A {
                         out.println(ans);
                 }
         }
-        void run() throws Exception{
+
+        void run() {
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);

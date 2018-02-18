@@ -1,75 +1,94 @@
-package Codes.Codeforces.ED37;
+package CFRound.ED37;
 
-
-
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
 import java.util.*;
-import java.io.*;
-public class B {
-        String INPUT = "1 3 4 5 4 4 6 6";
+public class E {
+        String INPUT = "5 5 1 2 3 4 3 2 4 2 2 5";
+        Set<Integer> s1 = new HashSet<>();
+        Set<Integer> s2 = new HashSet<>();
         void solve()
         {
-                int n = i();
-                PriorityQueue<Pair> pq = new PriorityQueue<>();
-                Pair[] a = new Pair[n];
-                int time = 1000000;
-                for (int i = 1; i <= n; i++) {
-                        int x = i(), y = i();
-                        time = Math.min(x,time);
-                        a[i-1] = new Pair(i,x,y);
+                int n = i(),m = i();
+                int[] from = new int[m];
+                int[] to = new int[m];
+                for (int i = 0; i < m; i++) {
+                        from[i] = i()-1;
+                        to[i] = i()-1;
                 }
-                int ind = 0;
-                int[] ans = new int[n+1];
-                int q = 0,first = 0;
-                for(int i = 1; i<5001; i++)
-                {
-                        if(ind<n && a[ind].b!=i)
-                                continue;
-                        while(ind<n && a[ind].b==i){
-                                pq.add(a[ind]);
-                                ind++;
-                        }
-                        if(pq.isEmpty())
-                                break;
-                        Pair p = pq.remove();
-                        time = Math.max(time,p.b);
-                        if(p.c-time>=0)
-                                ans[p.a] = time++;
+                int[][] g = arrayGraphU(from,to,n);
+                for (int i = 0; i <n ; i++) {
+                        s1.add(i);
                 }
-                for(int i=1 ; i<=n ; i++)
-                        out.print(ans[i]+" ");
-
-                out.println();
+                int[] ans = new int[n];int k=0;
+                for (int i = 0; i < n; i++) {
+                        if(!s1.contains(i)) continue;
+                        ans[k++] = bfs(i,g);
+                }
+                ans = Arrays.copyOf(ans,k);
+                Arrays.sort(ans);
+                out.println(k);
+                Arrays.stream(ans).forEach(e->out.print(e+" "));
         }
-        static class Pair implements Comparable<Pair>
+        private int bfs(int i,int[][] g)
         {
-                int a,b,c;
-
-                @Override
-                public int compareTo(Pair o) {
-                       if(Integer.compare(this.b,o.b)==0)
-                               return this.a-o.a;
-                       return this.b-o.b;
+                int ans = 1;
+                s1.remove(i);
+                Queue<Integer> q = new LinkedList<>();
+                q.add(i);
+                while(!q.isEmpty())
+                {
+                        int now = q.poll();
+                        for(int x: g[now])
+                        {
+                                if(!s1.contains(x)) continue;
+                                s1.remove(x);
+                                s2.add(x);
+                        }
+                        for(int x: s1)
+                        {
+                                q.add(x);
+                                ans++;
+                        }
+                        s1.clear();
+                        s1.addAll(s2);
+                        s2.clear();
                 }
-
-                public Pair(int a, int b, int c) {
-                        this.a = a;
-                        this.b = b;
-                        this.c = c;
-                }
+                return ans;
         }
-        void run() throws Exception{
+        private int[][] arrayGraphU(int[] f, int[] t, int n) {
+                int[][] graph = new int[n][];
+                int[] p = new int[n];
+                for (int from : f) {
+                        p[from]++;
+                }
+                for (int to : t) {
+                        p[to]++;
+                }
+                for (int i = 0; i < n; i++) {
+                        graph[i] = new int[p[i]];
+                }
+                for (int i = 0; i < f.length; i++) {
+                        graph[f[i]][--p[f[i]]] = t[i];
+                        graph[t[i]][--p[t[i]]] = f[i];
+                }
+                return graph;
+
+        }
+
+        void run() {
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
-                int t = i();
-                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new B().run();
+                new E().run();
         }
         InputStream is;
         PrintWriter out;

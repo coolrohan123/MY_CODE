@@ -1,6 +1,12 @@
-package Codes.Codeforces.ED37;
-import java.util.*;
-import java.io.*;
+package CFRound.ED37;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.InputMismatchException;
 public class G {
         String INPUT = "5\n" +
                 "42 42 42\n" +
@@ -55,7 +61,7 @@ public class G {
                 }
         }
 
-        void run() throws Exception{
+        void run() {
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);

@@ -1,3 +1,5 @@
+package CFRound.Round463;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -5,49 +7,71 @@ import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 
-class Main {
+public class B {
         public int lenbuf = 0, ptrbuf = 0;
-        String INPUT = "2 1000 2 1";
+        String INPUT = "4\n" +
+                "82 94 6\n" +
+                "56 67 4\n" +
+                "28 59 9\n" +
+                "39 74 4";
+        int N = (int) 1e6 + 2;
+        int[] a = new int[N];
+        int[][] dp = new int[N][10];
         InputStream is;
         PrintWriter out;
         private byte[] inbuf = new byte[1024];
         private boolean oj = System.getProperty("ONLINE_JUDGE") != null;
 
         public static void main(String[] args) throws Exception {
-                new Main().run();
+                new B().run();
         }
 
         void solve() {
-                final int n = i();
-                long k = l();
-                int[] a = ia(n);
-                int[] temp = Arrays.copyOf(a, n);
-                int ans = a[0];
-                int[] val = new int[n + 1];
-                for (int i = 0; i < n - 1; i++) {
-                        if (a[i] > a[i + 1]) {
-                                val[a[i]]++;
-                                swap(a, i, i + 1);
-
-                        } else {
-                                ans = a[i + 1];
-                                val[a[i + 1]]++;
+                preprocess();
+                //out.print(a[4]);
+                for (int i = 0; i < 10; i++) {
+                        for (int j = 1; j < N; j++) {
+                                if (a[j] == i) {
+                                        dp[j][i] = dp[j - 1][i] + 1;
+                                } else {
+                                        dp[j][i] = dp[j - 1][i];
+                                }
                         }
                 }
-                for (int x : temp) {
-                        if (val[x] >= k) {
-                                out.println(x);
-                                return;
-                        }
+                //out.print(dp[20][4]);
+                int q = i();
+                while (q-- > 0) {
+                        final int l = i(), r = i(), k = i();
+                        out.println(dp[r][k] - dp[l - 1][k]);
                 }
-                out.println(Arrays.stream(temp).max().getAsInt());
 
         }
 
-        void swap(int[] a, int i, int j) {
-                int temp = a[i];
-                a[i] = a[j];
-                a[j] = temp;
+        void preprocess() {
+                for (int i = 0; i < N; i++) {
+                        if (i < 10) {
+                                a[i] = i;
+                        } else {
+                                a[i] = calculate(i);
+                        }
+                }
+        }
+
+        int calculate(int i) {
+                if (i < 10) {
+                        return i;
+                }
+                int ans = calculate(val(String.valueOf(i)));
+                return ans;
+        }
+
+        int val(String x) {
+                int ans = 1;
+                for (int i = 0; i < x.length(); i++) {
+                        if (x.charAt(i) == '0') continue;
+                        ans = ans * (x.charAt(i) - '0');
+                }
+                return ans;
         }
 
         void run() {

@@ -1,73 +1,80 @@
-package Codes.Codeforces.ED37;
+package CFRound.ED37;
 
-import java.util.*;
-import java.io.*;
-public class C {
-        String INPUT = "6\n" +
-                "1 2 5 3 4 6\n" +
-                "010100";
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.InputMismatchException;
+import java.util.PriorityQueue;
+public class B {
+        String INPUT = "1 3 4 5 4 4 6 6";
         void solve()
         {
                 int n = i();
-                int[] a = new int[n+1];
-                for (int i = 1; i <=n ; i++) {
-                        a[i] = i();
+                PriorityQueue<Pair> pq = new PriorityQueue<>();
+                Pair[] a = new Pair[n];
+                int time = 1000000;
+                for (int i = 1; i <= n; i++) {
+                        int x = i(), y = i();
+                        time = Math.min(x,time);
+                        a[i-1] = new Pair(i,x,y);
                 }
-                int[] swap = new int[n];
-                char[] s = s().toCharArray();
-                for(int i =1 ; i<=n-1; i++){
-                        swap[i] = s[i-1]-'0';
-                }
-                for(int i =1; i<=n-1; i++)
+                int ind = 0;
+                int[] ans = new int[n+1];
+                int q = 0,first = 0;
+                for(int i = 1; i<5001; i++)
                 {
-                        if(swap[i]==1)
-                        {
-                                int j = i;
-                                while(j<=n-1 && swap[j] == 1) j++;
-                                Arrays.sort(a,i,j+1);
-                                i = j;
+                        if(ind<n && a[ind].b!=i)
+                                continue;
+                        while(ind<n && a[ind].b==i){
+                                pq.add(a[ind]);
+                                ind++;
                         }
+                        if(pq.isEmpty())
+                                break;
+                        Pair p = pq.remove();
+                        time = Math.max(time,p.b);
+                        if(p.c-time>=0)
+                                ans[p.a] = time++;
                 }
-                boolean ok = true;
-                for(int i=1; i<=n ; i++)
-                        ok &= (a[i]==a[i-1]+1);
-                if(ok) out.println("YES");
-                else    out.println("NO");
+                for(int i=1 ; i<=n ; i++)
+                        out.print(ans[i]+" ");
 
-                ///implemented in the contest, wrong logic
-//                int ind = 0;
-//                boolean flag = true;
-//                for(int i = 1; i<=n-1; i++)
-//                {
-//                        if(a[i]==i) continue;
-//                        if(a[i]<i) continue;
-//                        ind = a[i] -1;
-//                        for (int j = i; j <=ind ; j++) {
-//                                if(swap[j]!=1)
-//                                {
-//                                        flag = false;
-//                                        break;
-//                                }
-//                        }
-//                        if(!flag)
-//                                break;
-//                        i = ind;
-//                }
-//                if(flag) out.println("YES");
-//                else    out.println("NO");
-
+                out.println();
         }
-        void run() throws Exception{
+        static class Pair implements Comparable<Pair>
+        {
+                int a,b,c;
+
+                @Override
+                public int compareTo(Pair o) {
+                       if(Integer.compare(this.b,o.b)==0)
+                               return this.a-o.a;
+                       return this.b-o.b;
+                }
+
+                public Pair(int a, int b, int c) {
+                        this.a = a;
+                        this.b = b;
+                        this.c = c;
+                }
+        }
+
+        void run() {
                 is = oj ? System.in: new ByteArrayInputStream(INPUT.getBytes());
                 //is = System.in;
                 out = new PrintWriter(System.out);
                 long s = System.currentTimeMillis();
+                int t = i();
+                while(t-->0)
                 solve();
                 out.flush();
                 tr(System.currentTimeMillis()-s+"ms");
         }
         public static void main(String[] args)throws Exception {
-                new C().run();
+                new B().run();
         }
         InputStream is;
         PrintWriter out;
