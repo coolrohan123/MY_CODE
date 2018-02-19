@@ -9,9 +9,7 @@ public class SegRecur {
                 SegmentTree(int n, int[] a) {
                         this.t = new int[4 * n + 1];
                         this.a = new int[n + 1];
-                        for (int i = 1; i <= n; i++) {
-                                this.a[i] = a[i - 1];
-                        }
+                        System.arraycopy(a, 0, this.a, 1, n);
                 }
 
                 void query(int n, int s, int e, int l, int r, int x) {
@@ -29,7 +27,20 @@ public class SegRecur {
                         query(2 * n + 1, m + 1, e, l, r, x);
                 }
 
-                void update(int n, int s, int e, int i, int val) {
+                void update(int n, int s, int e, int l, int r, int val) {// update in range without lazy
+                        if (l > e || r < s) return;
+                        if (s == e) {
+                                t[n] = a[s];
+                                return;
+                        }
+                        int m = (s + e) >> 1;
+                        update(2 * n, s, m, l, r, val);
+                        update(2 * n + 1, m + 1, e, l, r, val);
+                        t[n] = gcd(t[2 * n], t[2 * n + 1]);
+
+                }
+
+                void update(int n, int s, int e, int i, int val) {// single point update
                         if (i > e || i < s) return;
                         if (s == e) {
                                 t[n] = val;

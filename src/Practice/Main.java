@@ -2,30 +2,23 @@ package Practice;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 
 // Please name your class Main
 class Main {
         public static void main(String[] args) throws java.lang.Exception {
                 BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                int n = Integer.parseInt(br.readLine());
-                String[] str = new String[n];
-                for (int i = 0; i < n; i++) {
-                        str[i] = br.readLine();
+                String[] str = br.readLine().split("\\+");
+                int[] a = new int[str.length];
+                for (int i = 0; i < str.length; i++) {
+                        a[i] = str[i].charAt(0) - '0';
                 }
-                for (int i = 0; i < n; i++) {
-                        boolean ok = false;
-                        for (int j = 0; j < n; j++) {
-                                for (int k = 0; k < n; k++) {
-                                        if (j == k) continue;
-                                        ok |= str[i].equals(str[j] + "" + str[k]);
-                                }
-                                if (ok) {
-                                        System.out.print(i + 1 + " ");
-                                        break;
-                                }
+                Arrays.sort(a);
+                for (int i = 0; i < a.length; i++) {
+                        System.out.print(a[i]);
+                        if (i != a.length - 1) {
+                                System.out.print('+');
                         }
                 }
-
-
         }
 }
